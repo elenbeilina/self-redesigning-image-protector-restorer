@@ -2,7 +2,7 @@ package methods;
 
 import java.awt.image.BufferedImage;
 
-public class Descriptor extends Encryptor{
+public class Descriptor {
     public static String b_msg = "";
     public static int len = 0;
 
