@@ -7,6 +7,7 @@ import exceptions.EncodeException;
 import methods.Descriptor;
 import methods.Encryptor;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 import static constants.Parameters.*;
 import static utils.Util.*;
+
 
 public class MainFrame extends JFrame {
 
@@ -30,6 +32,7 @@ public class MainFrame extends JFrame {
         setTitle(PROGRAM_NAME);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         addWindowListener(new WindowEventsHandler());
+
         createComponents();
     }
 
@@ -40,23 +43,18 @@ public class MainFrame extends JFrame {
     }
 
     public void encryptImage(Encryptor encryptor) {
-        BufferedImage image = toBufferedImage(imagePanel);
-
         String s = JOptionPane.showInputDialog(this, "Embedded text", PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE);
-        imagePanel.setTxt(s);
         if (s == null) {
             return;
         }
 
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                File out = FileFilter.addExtension(fileChooser.getSelectedFile());
-                encryptor.hideTheMessage(s, image, out);
+                encryptor.hideTheMessage(imagePanel.getCoverImage(),s);
+                loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
                 showErrorMessage(this, MESSAGE_ENCRYPTION_ERROR, e.getMessage());
-            } catch (IOException e) {
-                showErrorMessage(this, MESSAGE_IO_ERROR, e.getMessage());
             } catch (NullPointerException e) {
                 showErrorMessage(this, MESSAGE_UNEXPECTED_ERROR, e.getMessage());
             } catch (Exception e) {
@@ -65,12 +63,26 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private void loadImage() throws IOException {
+        File file = FileFilter.addExtension(fileChooser.getSelectedFile());
+
+        String name = file.getName();
+        String extension = name.substring(name.lastIndexOf('.') + 1);
+        try {
+            ImageIO.write(imagePanel.getCoverImage(), extension, file);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        imagePanel.loadImage(file);
+    }
+
     public void decryptImage(Descriptor descriptor) {
         BufferedImage image = toBufferedImage(imagePanel);
 
         try {
             String s = descriptor.decodeTheMessage(image);
-            JOptionPane.showInputDialog(this, MESSAGE_DECRYPTION_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, imagePanel.getTxt(s));
+            JOptionPane.showInputDialog(this, MESSAGE_DECRYPTION_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, s);
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {

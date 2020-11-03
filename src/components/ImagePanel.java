@@ -8,10 +8,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import static utils.Util.convertImage;
+
 public class ImagePanel extends JPanel {
 	private final JLabel image;
 	private final JLabel header;
-	private JLabel txt;
+	private BufferedImage coverImage;
+
+	public BufferedImage getCoverImage() {
+		return coverImage;
+	}
 
 	public ImagePanel() {
 		header = new JLabel();
@@ -22,11 +28,6 @@ public class ImagePanel extends JPanel {
 		
 		JPanel p2 = new JPanel();
 		p2.setLayout(new BorderLayout());
-
-		JPanel p3 = new JPanel();
-		txt = new JLabel();
-		txt.setVisible(false);
-		p3.add(txt);
 
 		image = new JLabel();
 		p2.add(image,BorderLayout.CENTER);
@@ -42,6 +43,7 @@ public class ImagePanel extends JPanel {
 			return;
 		}
 		BufferedImage loadedImage = ImageIO.read(f);
+		coverImage = convertImage(loadedImage);
 		image.setIcon(new ImageIcon(loadedImage));
 		setHeaderString(f.getName());
 	}
@@ -50,19 +52,11 @@ public class ImagePanel extends JPanel {
 		return image;
 	}
 
-	public void setTxt(String txt) {
-		this.txt.setText(txt);
-	}
-
 	public void setHeaderString(String s) {
 		if (s.equals("")) {
 			header.setText("<No image>");
 		} else {
 			header.setText(s);
 		}
-	}
-
-	public String getTxt(String s) {
-		return txt.getText();
 	}
 }
