@@ -1,9 +1,6 @@
 package methods;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 import static utils.Util.convertToBits;
 import static utils.Util.getByteData;
@@ -11,8 +8,8 @@ import static utils.Util.getByteData;
 public class Encryptor {
 
     public void hideTheMessage(BufferedImage originalImage,
-                           String message) {
-        int[] bitArray = {0,0,0,0,1,0,0,0};
+                               String message) {
+        int[] bitArray = {0, 0, 0, 0, 1, 0, 0, 0};
 
         byte[] image = getByteData(originalImage);
         byte[] payload = message.getBytes();
@@ -22,7 +19,7 @@ public class Encryptor {
         int dataLength = data.length;
         int dataOverFlag = 0;
         for (int i = 0; i < imageLength && dataOverFlag == 0; i++) {
-            for (int j = 7; j >= 0  && dataOverFlag == 0; j--) {
+            for (int j = 7; j >= 0 && dataOverFlag == 0; j--) {
                 if (bitArray[j] == 1) {
                     int mask = returnMask(j);
                     image[i] = (byte) ((image[i] & mask));

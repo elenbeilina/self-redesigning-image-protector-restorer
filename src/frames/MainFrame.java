@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -50,7 +49,7 @@ public class MainFrame extends JFrame {
 
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                encryptor.hideTheMessage(imagePanel.getCoverImage(),s);
+                encryptor.hideTheMessage(imagePanel.getCoverImage(), s);
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
@@ -70,7 +69,7 @@ public class MainFrame extends JFrame {
         String extension = name.substring(name.lastIndexOf('.') + 1);
         try {
             ImageIO.write(imagePanel.getCoverImage(), extension, file);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -80,7 +79,7 @@ public class MainFrame extends JFrame {
     public void decryptImage(Descriptor descriptor) {
         try {
             String s = descriptor.decodeTheMessage(imagePanel.getCoverImage());
-            imagePanel.setText(s.substring(0,50));
+            imagePanel.setText(s.substring(0, 150));
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {

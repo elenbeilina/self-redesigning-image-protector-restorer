@@ -12,7 +12,7 @@ public class Descriptor {
         int offset = 0;
         int imageLength = image.length;
 
-        int[] bitArray = {0,0,0,0,1,0,0,0};
+        int[] bitArray = {0, 0, 0, 0, 1, 0, 0, 0};
 
         // counting how many bits are modified per byte
         int count = 0;
@@ -44,7 +44,7 @@ public class Descriptor {
         }
         try {
             return new String(secretMessage, StandardCharsets.US_ASCII);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
