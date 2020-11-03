@@ -78,11 +78,9 @@ public class MainFrame extends JFrame {
     }
 
     public void decryptImage(Descriptor descriptor) {
-        BufferedImage image = toBufferedImage(imagePanel);
-
         try {
-            String s = descriptor.decodeTheMessage(image);
-            JOptionPane.showInputDialog(this, MESSAGE_DECRYPTION_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, s);
+            String s = descriptor.decodeTheMessage(imagePanel.getCoverImage());
+            imagePanel.setText(s.substring(0,50));
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {

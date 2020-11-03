@@ -37,7 +37,7 @@ public class Util {
             newImageType = BufferedImage.TYPE_4BYTE_ABGR_PRE;
         } else {
             // no need to convert original image
-            return null;
+            return originalImage;
         }
         BufferedImage newImage = new BufferedImage(originalImage.getWidth(),
                 originalImage.getHeight(), newImageType);
