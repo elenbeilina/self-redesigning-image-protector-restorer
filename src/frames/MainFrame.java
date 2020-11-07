@@ -21,7 +21,8 @@ import static utils.Util.*;
 
 public class MainFrame extends JFrame {
 
-    private ImagePanel imagePanel;
+    private ImagePanel coverImagePanel;
+    private ImagePanel imageToHidePanel;
     private JFileChooser fileChooser;
 
     public MainFrame() {
@@ -35,9 +36,15 @@ public class MainFrame extends JFrame {
         createComponents();
     }
 
-    public void openImage() {
+    public void openCoverImage() {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            loadImageFile(fileChooser.getSelectedFile());
+            loadImageFile(fileChooser.getSelectedFile(), coverImagePanel);
+        }
+    }
+
+    public void openHideImage() {
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            loadImageFile(fileChooser.getSelectedFile(), imageToHidePanel);
         }
     }
 
@@ -49,7 +56,7 @@ public class MainFrame extends JFrame {
 
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                encryptor.hideTheMessage(imagePanel.getCoverImage(), s);
+                encryptor.hideTheMessage(coverImagePanel.getCoverImage(), s);
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
@@ -68,18 +75,17 @@ public class MainFrame extends JFrame {
         String name = file.getName();
         String extension = name.substring(name.lastIndexOf('.') + 1);
         try {
-            ImageIO.write(imagePanel.getCoverImage(), extension, file);
+            ImageIO.write(coverImagePanel.getCoverImage(), extension, file);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        imagePanel.loadImage(file);
+        coverImagePanel.loadImage(file);
     }
 
     public void decryptImage(Descriptor descriptor) {
         try {
-            String s = descriptor.decodeTheMessage(imagePanel.getCoverImage());
-            imagePanel.setText(s.substring(0, 150));
+            String s = descriptor.decodeTheMessage(coverImagePanel.getCoverImage());
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {
@@ -93,7 +99,8 @@ public class MainFrame extends JFrame {
 
     private void createComponents() {
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new OpenAction(this));
+        fileMenu.add(new OpenCoverImageAction(this));
+        fileMenu.add(new OpenSecretImageAction(this));
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(this));
 
@@ -119,15 +126,16 @@ public class MainFrame extends JFrame {
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setMultiSelectionEnabled(false);
 
-        imagePanel = new ImagePanel();
+        coverImagePanel = new ImagePanel("Cover image: ");
+        imageToHidePanel = new ImagePanel("Image to hide: ");
 
-        this.add(imagePanel, BorderLayout.CENTER);
-
+        this.add(coverImagePanel, BorderLayout.WEST);
+        this.add(imageToHidePanel, BorderLayout.EAST);
     }
 
-    private void loadImageFile(File f) {
+    private void loadImageFile(File f, ImagePanel panel) {
         try {
-            imagePanel.loadImage(f);
+            panel.loadImage(f);
         } catch (IOException e) {
             showErrorMessage(this, MESSAGE_IO_ERROR, e.getMessage());
         } catch (Exception e) {
