@@ -2,17 +2,21 @@ package methods;
 
 import java.awt.image.BufferedImage;
 
-import static utils.Util.convertToBits;
-import static utils.Util.getByteData;
+import static utils.Util.*;
 
 public class Encryptor {
 
     public void hideTheMessage(BufferedImage originalImage,
-                               String message) {
-        int[] bitArray = {0, 0, 0, 0, 1, 0, 0, 0};
+                               BufferedImage imageToHide) {
+        int[] bitArray = {1, 1, 0, 0, 0, 0, 0, 0};
+
+        if (originalImage.getWidth() < imageToHide.getWidth()
+        || originalImage.getHeight()< imageToHide.getHeight()){
+            throw new ArrayIndexOutOfBoundsException("Pic smaller image to hide");
+        }
 
         byte[] image = getByteData(originalImage);
-        byte[] payload = message.getBytes();
+        byte[] payload = getByteData(imageToHide);
         int offset = 0;
         int imageLength = image.length;
         boolean[] data = convertToBits(payload);
@@ -33,36 +37,4 @@ public class Encryptor {
             }
         }
     }
-
-    private int returnMask(int bit) {
-        int mask = 0xFF;
-        switch (bit) {
-            case 0:
-                mask = 0xFE;
-                break;
-            case 1:
-                mask = 0xFD;
-                break;
-            case 2:
-                mask = 0xFB;
-                break;
-            case 3:
-                mask = 0xF7;
-                break;
-            case 4:
-                mask = 0xEF;
-                break;
-            case 5:
-                mask = 0xDF;
-                break;
-            case 6:
-                mask = 0xBF;
-                break;
-            case 7:
-                mask = 0x7F;
-                break;
-        }
-        return mask;
-    }
-
 }

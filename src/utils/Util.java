@@ -2,11 +2,15 @@ package utils;
 
 import components.ImagePanel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public class Util {
     public static String MESSAGE_ENCRYPTION_ERROR = "Encryption error occurred";
@@ -60,5 +64,46 @@ public class Util {
         WritableRaster raster = userSpaceImage.getRaster();
         DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
         return buffer.getData();
+    }
+
+    public static int[] getIntData(BufferedImage image) {
+        return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+    }
+
+    public static BufferedImage getImage(byte[] data) throws IOException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(data);
+
+        return ImageIO.read(bis);
+    }
+
+    public static int returnMask(int bit) {
+        int mask = 0xFF;
+        switch (bit) {
+            case 0:
+                mask = 0xFE;
+                break;
+            case 1:
+                mask = 0xFD;
+                break;
+            case 2:
+                mask = 0xFB;
+                break;
+            case 3:
+                mask = 0xF7;
+                break;
+            case 4:
+                mask = 0xEF;
+                break;
+            case 5:
+                mask = 0xDF;
+                break;
+            case 6:
+                mask = 0xBF;
+                break;
+            case 7:
+                mask = 0x7F;
+                break;
+        }
+        return mask;
     }
 }

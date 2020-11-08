@@ -10,12 +10,12 @@ import java.io.IOException;
 import static utils.Util.convertImage;
 
 public class ImagePanel extends JPanel {
-    private final JLabel image;
+    private final JLabel imageLabel;
     private final JLabel imageName;
-    private BufferedImage coverImage;
+    private BufferedImage image;
 
-    public BufferedImage getCoverImage() {
-        return coverImage;
+    public BufferedImage getImage() {
+        return image;
     }
 
     public ImagePanel(String name) {
@@ -29,8 +29,8 @@ public class ImagePanel extends JPanel {
 
         JPanel p2 = new JPanel();
         p2.setLayout(new BorderLayout());
-        image = new JLabel();
-        p2.add(image, BorderLayout.CENTER);
+        imageLabel = new JLabel();
+        p2.add(imageLabel, BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
         add(p2, BorderLayout.CENTER);
@@ -39,21 +39,25 @@ public class ImagePanel extends JPanel {
 
     public void loadImage(File f) throws IOException {
         if (f == null) {
-            image.setIcon(null);
+            imageLabel.setIcon(null);
             return;
         }
         BufferedImage loadedImage = ImageIO.read(f);
-        coverImage = convertImage(loadedImage);
-        image.setIcon(new ImageIcon(loadedImage));
+        image = convertImage(loadedImage);
+        imageLabel.setIcon(new ImageIcon(loadedImage));
         setHeaderString(f.getName());
     }
 
-    public void setHeaderString(String s) {
-        String text = imageName.getText();
-        if (s.equals("")) {
-            imageName.setText(text + "<No image>");
-        } else {
-            imageName.setText(text + s);
+    public void loadImage(BufferedImage image) {
+        if(image == null){
+            return;
         }
+        imageLabel.setIcon(new ImageIcon(image));
+        setHeaderString("hidden image found");
+    }
+
+
+    public void setHeaderString(String s) {
+        imageName.setText(s);
     }
 }

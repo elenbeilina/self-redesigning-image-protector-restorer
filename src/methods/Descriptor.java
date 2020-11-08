@@ -1,18 +1,20 @@
 package methods;
 
-import java.awt.image.BufferedImage;
-import java.nio.charset.StandardCharsets;
+import exceptions.DecodeException;
 
+import java.awt.image.BufferedImage;
+
+import static java.awt.Color.RED;
 import static utils.Util.getByteData;
 
 public class Descriptor {
 
-    public String decodeTheMessage(BufferedImage coverImage) {
+    public byte[] decodeTheImage(BufferedImage coverImage) {
         byte[] image = getByteData(coverImage);
         int offset = 0;
         int imageLength = image.length;
 
-        int[] bitArray = {0, 0, 0, 0, 1, 0, 0, 0};
+        int[] bitArray = {1, 1, 0, 0, 0, 0, 0, 0};
 
         // counting how many bits are modified per byte
         int count = 0;
@@ -23,10 +25,10 @@ public class Descriptor {
         }
 
         boolean[] data = new boolean[imageLength * count];
-        for (byte b : image) {
+        for (byte value : image) {
             for (int j = 7; j >= 0; j--) {
                 if (bitArray[j] == 1) {
-                    int singleBit = (b >> j) & 1;
+                    int singleBit = (value >> j) & 1;
                     data[offset++] = singleBit == 1;
                 }
             }
@@ -39,14 +41,17 @@ public class Descriptor {
             for (int bit = 0; bit < 8; bit++) {
                 if (data[i * 8 + bit]) {
                     secretMessage[i] |= (128 >> bit);
+
+                    int rgb = RED.getRed();
+                    image[i] = (byte) rgb;
                 }
             }
         }
         try {
-            return new String(secretMessage, StandardCharsets.US_ASCII);
+            return secretMessage;
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            throw new DecodeException("");
         }
     }
 }

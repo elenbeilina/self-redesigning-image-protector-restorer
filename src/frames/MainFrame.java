@@ -8,12 +8,18 @@ import methods.Descriptor;
 import methods.Encryptor;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 import static constants.Parameters.*;
 import static utils.Util.*;
@@ -49,14 +55,9 @@ public class MainFrame extends JFrame {
     }
 
     public void encryptImage(Encryptor encryptor) {
-        String s = JOptionPane.showInputDialog(this, "Embedded text", PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE);
-        if (s == null) {
-            return;
-        }
-
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                encryptor.hideTheMessage(coverImagePanel.getCoverImage(), s);
+                encryptor.hideTheMessage(coverImagePanel.getImage(), imageToHidePanel.getImage());
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
@@ -75,7 +76,7 @@ public class MainFrame extends JFrame {
         String name = file.getName();
         String extension = name.substring(name.lastIndexOf('.') + 1);
         try {
-            ImageIO.write(coverImagePanel.getCoverImage(), extension, file);
+            ImageIO.write(coverImagePanel.getImage(), extension, file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,12 +86,27 @@ public class MainFrame extends JFrame {
 
     public void decryptImage(Descriptor descriptor) {
         try {
-            String s = descriptor.decodeTheMessage(coverImagePanel.getCoverImage());
+            byte[] hiddenImage = descriptor.decodeTheImage(coverImagePanel.getImage());
+            coverImagePanel.loadImage(coverImagePanel.getImage());
+
+            draw(hiddenImage);
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {
             showErrorMessage(this, MESSAGE_UNEXPECTED_ERROR, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    private void draw(byte[] bytes) throws IOException {
+        BufferedImage imag = ImageIO.read(new ByteArrayInputStream(bytes));
+        for (byte aByte : bytes) {
+            if (aByte != 0) {
+                System.out.println("hey");
+            }
+        }
+        imageToHidePanel.loadImage(imag);
     }
 
     public void exit() {
