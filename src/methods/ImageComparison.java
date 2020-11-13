@@ -29,14 +29,8 @@ public class ImageComparison {
     public int comparison(BufferedImage srcImage, BufferedImage targetImage) {
         int similarity;
 
-        BufferedImage resized1 = resize(srcImage, 32, 32);
-        BufferedImage resized2 = resize(targetImage, 32, 32);
-
-        BufferedImage grayscale1 = grayscale(resized1);
-        BufferedImage grayscale2 = grayscale(resized2);
-
-        String srcCode = getHash(grayscale1);
-        String targetCode = getHash(grayscale2);
+        String srcCode = getHash(srcImage);
+        String targetCode = getHash(targetImage);
 
         similarity = distance(srcCode, targetCode);
 
