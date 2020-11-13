@@ -6,14 +6,13 @@ import exceptions.DecodeException;
 import exceptions.EncodeException;
 import methods.Descriptor;
 import methods.Encryptor;
+import methods.ImageComparison;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -95,6 +94,12 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public void compareImage(ImageComparison comparison){
+        int distance = comparison.comparison(coverImagePanel.getImage(), imageToHidePanel.getImage());
+
+        JOptionPane.showInputDialog(this, MESSAGE_SIMILARITIES_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, distance);
+    }
+
     public void exit() {
         this.dispose();
     }
@@ -112,6 +117,9 @@ public class MainFrame extends JFrame {
         JMenu decryptionMenu = new JMenu("Decryption");
         decryptionMenu.add(new LSBMethodDecryptionAction(this));
 
+        JMenu comparisonMenu = new JMenu("Comparison");
+        comparisonMenu.add(new ImageComparisonActon(this));
+
         JMenu helpMenu = new JMenu("Help");
         helpMenu.add(new AboutAction(this));
 
@@ -119,6 +127,7 @@ public class MainFrame extends JFrame {
         menuBar.add(fileMenu);
         menuBar.add(encryptionMenu);
         menuBar.add(decryptionMenu);
+        menuBar.add(comparisonMenu);
         menuBar.add(helpMenu);
         setJMenuBar(menuBar);
 

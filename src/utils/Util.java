@@ -19,7 +19,7 @@ public class Util {
     public static String MESSAGE_IO_ERROR = "I/O error occurred";
 
     public static String MESSAGE_ENCRYPTION_COMPLETED = "Encryption completed";
-    public static String MESSAGE_DECRYPTION_COMPLETED = "Decryption completed. \n\nDecrypted text:";
+    public static String MESSAGE_SIMILARITIES_COMPLETED = "Perceptive hash and hamming distance analysis completed. \n\nDistance:";
 
     public static BufferedImage convertImage(BufferedImage originalImage) {
         int newImageType = originalImage.getType();
