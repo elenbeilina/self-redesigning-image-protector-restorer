@@ -8,9 +8,6 @@ import methods.Descriptor;
 import methods.Encryptor;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -19,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import static constants.Parameters.*;
 import static utils.Util.*;
@@ -30,6 +26,7 @@ public class MainFrame extends JFrame {
     private ImagePanel coverImagePanel;
     private ImagePanel imageToHidePanel;
     private JFileChooser fileChooser;
+    private File toHide;
 
     public MainFrame() {
         setSize(MAINFRAME_WIDTH, MAINFRAME_HEIGHT);
@@ -50,14 +47,15 @@ public class MainFrame extends JFrame {
 
     public void openHideImage() {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            loadImageFile(fileChooser.getSelectedFile(), imageToHidePanel);
+            toHide = fileChooser.getSelectedFile();
+            loadImageFile(toHide, imageToHidePanel);
         }
     }
 
     public void encryptImage(Encryptor encryptor) {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                encryptor.hideTheMessage(coverImagePanel.getImage(), imageToHidePanel.getImage());
+                encryptor.hideTheMessage(coverImagePanel.getImage(), toHide);
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
@@ -86,27 +84,15 @@ public class MainFrame extends JFrame {
 
     public void decryptImage(Descriptor descriptor) {
         try {
-            byte[] hiddenImage = descriptor.decodeTheImage(coverImagePanel.getImage());
-            coverImagePanel.loadImage(coverImagePanel.getImage());
-
-            draw(hiddenImage);
+            File file = descriptor.decodeTheImage(coverImagePanel.getImage());
+            coverImagePanel.loadImage(file);
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {
             showErrorMessage(this, MESSAGE_UNEXPECTED_ERROR, e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void draw(byte[] bytes) throws IOException {
-        BufferedImage imag = ImageIO.read(new ByteArrayInputStream(bytes));
-        for (byte aByte : bytes) {
-            if (aByte != 0) {
-                System.out.println("hey");
-            }
-        }
-        imageToHidePanel.loadImage(imag);
     }
 
     public void exit() {

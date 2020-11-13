@@ -48,15 +48,6 @@ public class ImagePanel extends JPanel {
         setHeaderString(f.getName());
     }
 
-    public void loadImage(BufferedImage image) {
-        if(image == null){
-            return;
-        }
-        imageLabel.setIcon(new ImageIcon(image));
-        setHeaderString("hidden image found");
-    }
-
-
     public void setHeaderString(String s) {
         imageName.setText(s);
     }
