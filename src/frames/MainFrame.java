@@ -23,7 +23,6 @@ import static utils.Util.*;
 public class MainFrame extends JFrame {
 
     private ImagePanel coverImagePanel;
-    private ImagePanel imageToHidePanel;
     private JFileChooser fileChooser;
     private File toHide;
 
@@ -44,17 +43,10 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void openHideImage() {
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            toHide = fileChooser.getSelectedFile();
-            loadImageFile(toHide, imageToHidePanel);
-        }
-    }
-
     public void encryptImage(Encryptor encryptor) {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                encryptor.hideTheMessage(coverImagePanel.getImage(), toHide);
+                encryptor.hideTheMessage(coverImagePanel.getImage(), "00000000000000000000000100000000000000000000000010000000000000000000000");
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
@@ -83,8 +75,8 @@ public class MainFrame extends JFrame {
 
     public void decryptImage(Descriptor descriptor) {
         try {
-            File file = descriptor.decodeTheImage(coverImagePanel.getImage());
-            coverImagePanel.loadImage(file);
+            String phash = descriptor.decodeTheImage(coverImagePanel.getImage());
+            showInformationMessage(this, phash);
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
         } catch (NullPointerException e) {
@@ -95,9 +87,8 @@ public class MainFrame extends JFrame {
     }
 
     public void compareImage(ImageComparison comparison){
-        int distance = comparison.comparison(coverImagePanel.getImage(), imageToHidePanel.getImage());
 
-        JOptionPane.showInputDialog(this, MESSAGE_SIMILARITIES_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, distance);
+        JOptionPane.showInputDialog(this, MESSAGE_SIMILARITIES_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, null);
     }
 
     public void exit() {
@@ -107,7 +98,6 @@ public class MainFrame extends JFrame {
     private void createComponents() {
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(new OpenCoverImageAction(this));
-        fileMenu.add(new OpenSecretImageAction(this));
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(this));
 
@@ -138,10 +128,8 @@ public class MainFrame extends JFrame {
         fileChooser.setMultiSelectionEnabled(false);
 
         coverImagePanel = new ImagePanel("Cover image: ");
-        imageToHidePanel = new ImagePanel("Image to hide: ");
 
         this.add(coverImagePanel, BorderLayout.WEST);
-        this.add(imageToHidePanel, BorderLayout.EAST);
     }
 
     private void loadImageFile(File f, ImagePanel panel) {
