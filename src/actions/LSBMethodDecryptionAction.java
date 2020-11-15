@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 public class LSBMethodDecryptionAction extends AbstractProgramMenuAction {
 
     public LSBMethodDecryptionAction(MainFrame owner) {
-        super(owner, "LSB Method");
+        super(owner, "Decrypt");
     }
 
     @Override

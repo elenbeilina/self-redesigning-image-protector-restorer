@@ -1,37 +1,32 @@
 package methods;
 
-class SecurityManager
-{
-  private String password;
-  private int index;
-  private int len;
+class SecurityManager {
+    private String password;
+    private int index;
+    private int len;
 
-  SecurityManager(String p)
-  {
-    password = p;
-    index = 0;
-    len = password.length();
-  }
+    SecurityManager(String p) {
+        password = p;
+        index = 0;
+        len = password.length();
+    }
 
-  int getPermutation()
-  {//1,2,3
-    //pasword.length() % 3 + 1;
-    
-    int sum = 0;
-    int i;
-   
-    //sum of ASCII values of characters of password
-    for(i =0 ;i < len; i++)
-     sum += (int) password.charAt(i); 
+    int getPermutation() {//1,2,3
+        //pasword.length() % 3 + 1;
+        int sum = 0;
+        int i;
 
-    return sum %3 +1;    
-  }
+        //sum of ASCII values of characters of password
+        for (i = 0; i < len; i++)
+            sum += (int) password.charAt(i);
 
-  int primaryCrypto(int x)
-  {
-    int y = x ^ (int) password.charAt(index);
-    index = (index+1) % len;
-    return y;
-  }
- 
+        return sum % 3 + 1;
+    }
+
+    int primaryCrypto(int x) {
+        int y = x ^ (int) password.charAt(index);
+        index = (index + 1) % len;
+        return y;
+    }
+
 }

@@ -25,18 +25,6 @@ public class ImageComparison {
         c[0] = 1 / Math.sqrt(2.0);
     }
 
-
-    public int comparison(BufferedImage srcImage, BufferedImage targetImage) {
-        int similarity;
-
-        String srcCode = getHash(srcImage);
-        String targetCode = getHash(targetImage);
-
-        similarity = distance(srcCode, targetCode);
-
-        return similarity;
-    }
-
     private int distance(String s1, String s2) {
         int counter = 0;
         for (int k = 0; k < s1.length(); k++) {
@@ -54,7 +42,7 @@ public class ImageComparison {
         img = resize(img, size, size);
 
         // 2. Reduce color.
-        img = grayscale(img);
+        grayscale(img);
 
         double[][] vals = new double[size][size];
 
@@ -109,10 +97,9 @@ public class ImageComparison {
         return resizedImage;
     }
 
-    private BufferedImage grayscale(BufferedImage img) {
+    private void grayscale(BufferedImage img) {
         ColorConvertOp colorConvert = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         colorConvert.filter(img, img);
-        return img;
     }
 
     private static int getBlue(BufferedImage img, int x, int y) {

@@ -1,5 +1,6 @@
 package methods;
 
+import components.Block;
 import exceptions.EncodeException;
 import utils.HeaderUtils;
 
@@ -8,8 +9,9 @@ import java.awt.image.WritableRaster;
 
 public class Encryptor {
 
-    public void hideTheMessage(BufferedImage coverImage,
+    public void encryptHash(BufferedImage coverImage, Block partToEncrypt,
                                String messageToHide) {
+
             capacityCheck(coverImage, messageToHide);
 
             byte[] messageInBytes = messageToHide.getBytes();
@@ -18,19 +20,18 @@ public class Encryptor {
             SecurityManager securityManager = new SecurityManager("csf is the best");
 
             int x, y;
-            int r = 0;
-            int g = 0;
-            int b = 0;
+            int r,g,b;
+
             int[] arr;
             int[] result;
             int counter = 0;
-            int data = 0;
+            int data;
             int flag = securityManager.getPermutation();
             boolean keepEmbedding = true;
 
             //embedding
-            for (y = 0; y < coverImage.getHeight() && keepEmbedding; y++) {
-                for (x = 0; x < coverImage.getWidth(); x++) {
+            for (y = partToEncrypt.getY(); y < partToEncrypt.getHeight() && keepEmbedding; y++) {
+                for (x = partToEncrypt.getX(); x < partToEncrypt.getWidth(); x++) {
                     //per pixel
                     r = raster.getSample(x, y, 0);//red
                     g = raster.getSample(x, y, 1);//green

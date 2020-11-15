@@ -1,18 +1,21 @@
 package frames;
 
 import actions.*;
+import components.Block;
 import components.ImagePanel;
 import exceptions.DecodeException;
 import exceptions.EncodeException;
 import methods.Descriptor;
 import methods.Encryptor;
 import methods.ImageComparison;
+import methods.Protector;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -24,7 +27,6 @@ public class MainFrame extends JFrame {
 
     private ImagePanel coverImagePanel;
     private JFileChooser fileChooser;
-    private File toHide;
 
     public MainFrame() {
         setSize(MAINFRAME_WIDTH, MAINFRAME_HEIGHT);
@@ -46,7 +48,8 @@ public class MainFrame extends JFrame {
     public void encryptImage(Encryptor encryptor) {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                encryptor.hideTheMessage(coverImagePanel.getImage(), "00000000000000000000000100000000000000000000000010000000000000000000000");
+                BufferedImage image = coverImagePanel.getImage();
+                encryptor.encryptHash(image, new Block(0, 0, image.getWidth(), image.getHeight()), "00000000000000000000000100000000000000000000000010000000000000000000000");
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
             } catch (EncodeException e) {
@@ -86,9 +89,14 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void compareImage(ImageComparison comparison){
+    public void protectImage(Protector protector) throws IOException {
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String n = JOptionPane.showInputDialog(this, "Enter n", PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE);
 
-        JOptionPane.showInputDialog(this, MESSAGE_SIMILARITIES_COMPLETED, PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+            protector.protectImage(coverImagePanel.getImage(), Integer.parseInt(n));
+            loadImage();
+            showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
+        }
     }
 
     public void exit() {
@@ -101,23 +109,20 @@ public class MainFrame extends JFrame {
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(this));
 
-        JMenu encryptionMenu = new JMenu("Encryption");
-        encryptionMenu.add(new LSBMethodEncryptionAction(this));
+        JMenu lsbMenu = new JMenu("LSB");
+        lsbMenu.add(new LSBMethodEncryptionAction(this));
+        lsbMenu.add(new LSBMethodDecryptionAction(this));
 
-        JMenu decryptionMenu = new JMenu("Decryption");
-        decryptionMenu.add(new LSBMethodDecryptionAction(this));
-
-        JMenu comparisonMenu = new JMenu("Comparison");
-        comparisonMenu.add(new ImageComparisonActon(this));
+        JMenu protectorMenu = new JMenu("Protector");
+        protectorMenu.add(new ImageProtectAction(this));
 
         JMenu helpMenu = new JMenu("Help");
         helpMenu.add(new AboutAction(this));
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
-        menuBar.add(encryptionMenu);
-        menuBar.add(decryptionMenu);
-        menuBar.add(comparisonMenu);
+        menuBar.add(protectorMenu);
+        menuBar.add(lsbMenu);
         menuBar.add(helpMenu);
         setJMenuBar(menuBar);
 
