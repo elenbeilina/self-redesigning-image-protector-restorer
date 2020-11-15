@@ -5,12 +5,12 @@ import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 
-public class ImageComparison {
+public class Hamming {
 
     private final int size = 32;
     private final int smallerSize = 8;
 
-    public ImageComparison() {
+    public Hamming() {
         initCoefficients();
     }
 
@@ -25,7 +25,7 @@ public class ImageComparison {
         c[0] = 1 / Math.sqrt(2.0);
     }
 
-    private int distance(String s1, String s2) {
+    public int distance(String s1, String s2) {
         int counter = 0;
         for (int k = 0; k < s1.length(); k++) {
             if (s1.charAt(k) != s2.charAt(k)) {

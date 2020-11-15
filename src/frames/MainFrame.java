@@ -7,7 +7,6 @@ import exceptions.DecodeException;
 import exceptions.EncodeException;
 import methods.Descriptor;
 import methods.Encryptor;
-import methods.ImageComparison;
 import methods.Protector;
 
 import javax.imageio.ImageIO;
@@ -91,12 +90,14 @@ public class MainFrame extends JFrame {
 
     public void protectImage(Protector protector) throws IOException {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            String n = JOptionPane.showInputDialog(this, "Enter n", PROGRAM_NAME, JOptionPane.INFORMATION_MESSAGE);
-
-            protector.protectImage(coverImagePanel.getImage(), Integer.parseInt(n));
+            protector.protectImage(coverImagePanel.getImage());
             loadImage();
             showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
         }
+    }
+
+    public void authenticateImage(Protector protector) {
+        protector.authenticatingImage(coverImagePanel.getImage());
     }
 
     public void exit() {
@@ -115,6 +116,7 @@ public class MainFrame extends JFrame {
 
         JMenu protectorMenu = new JMenu("Protector");
         protectorMenu.add(new ImageProtectAction(this));
+        protectorMenu.add(new ImageAuthenticateAction(this));
 
         JMenu helpMenu = new JMenu("Help");
         helpMenu.add(new AboutAction(this));
