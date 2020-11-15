@@ -10,7 +10,6 @@ public class Encryptor {
 
     public void hideTheMessage(BufferedImage coverImage,
                                String messageToHide) {
-        {
             capacityCheck(coverImage, messageToHide);
 
             byte[] messageInBytes = messageToHide.getBytes();
@@ -37,14 +36,13 @@ public class Encryptor {
                     g = raster.getSample(x, y, 1);//green
                     b = raster.getSample(x, y, 2);//blue
 
-                    if (counter <= messageInBytes.length) {//embed header
+                    if (counter < messageInBytes.length) {//embed header
                         data = messageInBytes[counter];
+                        data = securityManager.primaryCrypto(data);
                     } else {//embed file content
                         keepEmbedding = false;
                         break;
                     }
-                    data = securityManager.primaryCrypto(data);
-                }
 
                 arr = ByteProcessor.slice(data, flag);
                 result = ByteProcessor.merge(r, g, b, arr, flag);
@@ -57,7 +55,6 @@ public class Encryptor {
                 counter++;
                 flag = (flag + 1) % 3 + 1;
             }
-
         }
 
     }

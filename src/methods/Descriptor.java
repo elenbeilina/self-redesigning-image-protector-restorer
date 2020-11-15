@@ -37,7 +37,7 @@ public class Descriptor {
                 data = ByteProcessor.combine(arr, flag);
 
 
-                if (counter <= bytes.length) {
+                if (counter < bytes.length) {
                     data = securityManager.primaryCrypto(data);
                     bytes[counter] = (byte) data;
                 } else {
