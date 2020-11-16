@@ -66,7 +66,7 @@ public class Protector {
                     System.out.println("distance =" + distance);
 
                     //circle bad subBlock
-                    if(distance > 5){
+                    if(distance > 1){
                         Graphics2D g = (Graphics2D) image.getGraphics();
                         g.setColor(Color.RED);
                         g.setStroke(new BasicStroke(5));
