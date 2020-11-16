@@ -48,6 +48,10 @@ public class ImagePanel extends JPanel {
         setHeaderString(f.getName());
     }
 
+    public void loadImage(BufferedImage image) {
+        imageLabel.setIcon(new ImageIcon(image));
+    }
+
     public void setHeaderString(String s) {
         imageName.setText(s);
     }

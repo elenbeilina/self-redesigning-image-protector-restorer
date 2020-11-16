@@ -24,7 +24,7 @@ import static utils.Util.*;
 
 public class MainFrame extends JFrame {
 
-    private ImagePanel coverImagePanel;
+    private ImagePanel imagePanel;
     private JFileChooser fileChooser;
 
     public MainFrame() {
@@ -40,14 +40,14 @@ public class MainFrame extends JFrame {
 
     public void openCoverImage() {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            loadImageFile(fileChooser.getSelectedFile(), coverImagePanel);
+            loadImageFile(fileChooser.getSelectedFile(), imagePanel);
         }
     }
 
     public void encryptImage(Encryptor encryptor) {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                BufferedImage image = coverImagePanel.getImage();
+                BufferedImage image = imagePanel.getImage();
                 encryptor.encryptHash(image, new Block(0, 0, image.getWidth(), image.getHeight()), "00000000000000000000000100000000000000000000000010000000000000000000000");
                 loadImage();
                 showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
@@ -67,17 +67,17 @@ public class MainFrame extends JFrame {
         String name = file.getName();
         String extension = name.substring(name.lastIndexOf('.') + 1);
         try {
-            ImageIO.write(coverImagePanel.getImage(), extension, file);
+            ImageIO.write(imagePanel.getImage(), extension, file);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        coverImagePanel.loadImage(file);
+        imagePanel.loadImage(file);
     }
 
     public void decryptImage(Descriptor descriptor) {
         try {
-            String phash = descriptor.decodeTheImage(coverImagePanel.getImage());
+            String phash = descriptor.decodeTheImage(imagePanel.getImage());
             showInformationMessage(this, phash);
         } catch (DecodeException e) {
             showErrorMessage(this, MESSAGE_DECRYPTION_ERROR, e.getMessage());
@@ -90,14 +90,15 @@ public class MainFrame extends JFrame {
 
     public void protectImage(Protector protector) throws IOException {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            protector.protectImage(coverImagePanel.getImage());
+            protector.protectImage(imagePanel.getImage());
             loadImage();
             showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
         }
     }
 
     public void authenticateImage(Protector protector) {
-        protector.authenticatingImage(coverImagePanel.getImage());
+        protector.authenticatingImage(imagePanel.getImage());
+        imagePanel.loadImage(imagePanel.getImage());
     }
 
     public void exit() {
@@ -134,9 +135,9 @@ public class MainFrame extends JFrame {
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setMultiSelectionEnabled(false);
 
-        coverImagePanel = new ImagePanel("Cover image: ");
+        imagePanel = new ImagePanel("Image: ");
 
-        this.add(coverImagePanel, BorderLayout.WEST);
+        this.add(imagePanel, BorderLayout.WEST);
     }
 
     private void loadImageFile(File f, ImagePanel panel) {

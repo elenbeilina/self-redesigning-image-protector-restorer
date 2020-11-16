@@ -5,7 +5,7 @@ import methods.Protector;
 
 import java.awt.event.ActionEvent;
 
-public class ImageAuthenticateAction extends AbstractProgramMenuAction{
+public class ImageAuthenticateAction extends AbstractProgramMenuAction {
 
     public ImageAuthenticateAction(MainFrame owner) {
         super(owner, "Authenticate image");

@@ -2,6 +2,7 @@ package methods;
 
 import components.Block;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Protector {
@@ -63,6 +64,14 @@ public class Protector {
 
                     int distance = comparison.distance(hash, decryptedHash);
                     System.out.println("distance =" + distance);
+
+                    //circle bad subBlock
+                    if(distance > 5){
+                        Graphics2D g = (Graphics2D) image.getGraphics();
+                        g.setColor(Color.RED);
+                        g.setStroke(new BasicStroke(5));
+                        g.drawOval(x, y, blockWidth, blockHeight);
+                    }
 
                     x += blockWidth;
 
