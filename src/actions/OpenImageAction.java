@@ -7,10 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-public class OpenCoverImageAction extends AbstractProgramMenuAction {
+public class OpenImageAction extends AbstractProgramMenuAction {
 	
-	public OpenCoverImageAction(MainFrame owner) {
-		super(owner, "Choose cover image");
+	public OpenImageAction(MainFrame owner) {
+		super(owner, "Choose image");
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 	}
 	

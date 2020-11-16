@@ -107,7 +107,7 @@ public class MainFrame extends JFrame {
 
     private void createComponents() {
         JMenu fileMenu = new JMenu("File");
-        fileMenu.add(new OpenCoverImageAction(this));
+        fileMenu.add(new OpenImageAction(this));
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction(this));
 
