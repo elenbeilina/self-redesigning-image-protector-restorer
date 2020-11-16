@@ -30,8 +30,8 @@ public class Encryptor {
             boolean keepEmbedding = true;
 
             //embedding
-            for (y = partToEncrypt.getY(); y < partToEncrypt.getHeight() && keepEmbedding; y++) {
-                for (x = partToEncrypt.getX(); x < partToEncrypt.getWidth(); x++) {
+            for (y = partToEncrypt.getY(); y < partToEncrypt.getY() + partToEncrypt.getHeight() && keepEmbedding; y++) {
+                for (x = partToEncrypt.getX(); x < partToEncrypt.getX() + partToEncrypt.getWidth(); x++) {
                     //per pixel
                     r = raster.getSample(x, y, 0);//red
                     g = raster.getSample(x, y, 1);//green

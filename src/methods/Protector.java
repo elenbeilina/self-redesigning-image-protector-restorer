@@ -59,7 +59,7 @@ public class Protector {
                     String hash = comparison.getHash(subImage);
 
                     Descriptor descriptor = new Descriptor();
-                    String decryptedHash = descriptor.decodeTheImage(subImage);
+                    String decryptedHash = descriptor.decodeTheImage(subImage).substring(0,64);
 
                     int distance = comparison.distance(hash, decryptedHash);
                     System.out.println("distance =" + distance);
