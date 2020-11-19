@@ -28,8 +28,6 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
         setTitle(PROGRAM_NAME);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         addWindowListener(new WindowEventsHandler());
-        addMouseListener(this);
-        addMouseMotionListener(this);
 
         createComponents();
     }
@@ -88,17 +86,17 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
         imagePanel.loadImage(file);
     }
 
-    public void protectImage(Protector protector) throws IOException {
+    public void protectImage() {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            protector.protectImage(imagePanel.getImage());
-            loadImage();
-            showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
+            showInformationMessage(this, "Choose part to protect");
+            addMouseListener(this);
+            addMouseMotionListener(this);
         }
     }
 
-    public void authenticateImage(Protector protector) {
-        protector.authenticatingImage(imagePanel.getImage());
-        imagePanel.loadImage(imagePanel.getImage());
+    public void authenticateImage(Protector protector) throws Exception {
+        File file = protector.authenticatingImage(imagePanel.getImage());
+        imagePanel.loadImage(file);
     }
 
     private void loadImageFile(File f, ImagePanel panel) {
@@ -144,10 +142,20 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
         int h = c2 - c4;
         w = w * -1;
         h = h * -1;
-        BufferedImage img = imagePanel.getImage().getSubimage(c1, c2, w, h);
-        File save_path=new File("screen1.jpg");
-        ImageIO.write(img, "JPG", save_path);
-        System.out.println("Cropped image cropped.");
+
+        BufferedImage image = imagePanel.getImage();
+        BufferedImage partToProtect = image.getSubimage(c1, c2, w, h);
+
+        new Protector().protectImage(image, partToProtect);
+
+        Graphics graphics = image.getGraphics();
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(c1, c2, w, h);
+        drag_status=0;
+        repaint();
+        loadImage();
+
+        showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
     }
 
     @Override
@@ -175,13 +183,15 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
 
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(Color.RED);
-        int w = c1 - c3;
-        int h = c2 - c4;
-        w = w * -1;
-        h = h * -1;
-        if (w < 0) w = w * -1;
-        g.drawRect(c1, c2, w, h);
+        if(drag_status == 1){
+            g.setColor(Color.RED);
+            int w = c1 - c3;
+            int h = c2 - c4;
+            w = w * -1;
+            h = h * -1;
+            if (w < 0) w = w * -1;
+            g.drawRect(c1, c2, w, h);
+        }
     }
 
     private class WindowEventsHandler extends WindowAdapter {

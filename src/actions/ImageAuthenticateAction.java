@@ -13,6 +13,10 @@ public class ImageAuthenticateAction extends AbstractProgramMenuAction {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        owner.authenticateImage(new Protector());
+        try {
+            owner.authenticateImage(new Protector());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

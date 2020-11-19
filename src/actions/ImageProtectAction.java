@@ -14,10 +14,6 @@ public class ImageProtectAction extends AbstractProgramMenuAction {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        try {
-            owner.protectImage(new Protector());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        owner.protectImage();
     }
 }
