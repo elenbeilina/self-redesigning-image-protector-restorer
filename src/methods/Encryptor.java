@@ -1,6 +1,5 @@
 package methods;
 
-import components.Block;
 import exceptions.EncodeException;
 import utils.HeaderUtils;
 
@@ -13,9 +12,8 @@ import java.io.IOException;
 public class Encryptor {
 
     public void hideTheMessage(BufferedImage coverImage,
-                               File imageToHide) throws IOException {
+                               File imageToHide) throws IOException, EncodeException {
         {
-
             capacityCheck(coverImage, imageToHide);
 
             String header = HeaderUtils.formHeader(imageToHide.getName(), imageToHide.length());
@@ -71,7 +69,7 @@ public class Encryptor {
         }
     }
 
-    private void capacityCheck(BufferedImage coverImage, File imageToHide ){
+    private void capacityCheck(BufferedImage coverImage, File imageToHide) throws EncodeException {
         int w, h, tot;
         w = coverImage.getWidth();
         h = coverImage.getHeight();

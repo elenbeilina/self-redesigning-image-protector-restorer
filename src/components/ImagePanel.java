@@ -33,8 +33,8 @@ public class ImagePanel extends JPanel {
         p2.add(imageLabel, BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
-        add(p2, BorderLayout.CENTER);
-        add(p1, BorderLayout.NORTH);
+        add(p2, BorderLayout.NORTH);
+        add(p1, BorderLayout.SOUTH);
     }
 
     public void loadImage(File f) throws IOException {

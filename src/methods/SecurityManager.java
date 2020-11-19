@@ -1,9 +1,9 @@
 package methods;
 
 class SecurityManager {
-    private String password;
+    private final String password;
     private int index;
-    private int len;
+    private final int len;
 
     SecurityManager(String p) {
         password = p;

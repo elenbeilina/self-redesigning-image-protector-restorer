@@ -5,16 +5,16 @@ import methods.Protector;
 
 import java.awt.event.ActionEvent;
 
-public class ImageAuthenticateAction extends AbstractProgramMenuAction {
+public class ImageRestorerAction extends AbstractProgramMenuAction {
 
-    public ImageAuthenticateAction(MainFrame owner) {
-        super(owner, "Authenticate image");
+    public ImageRestorerAction(MainFrame owner) {
+        super(owner, "Restore image");
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
         try {
-            owner.authenticateImage(new Protector());
+            owner.restoreImage(new Protector());
         } catch (Exception e) {
             e.printStackTrace();
         }

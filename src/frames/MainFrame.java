@@ -40,7 +40,7 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
 
         JMenu protectorMenu = new JMenu("Protector");
         protectorMenu.add(new ImageProtectAction(this));
-        protectorMenu.add(new ImageAuthenticateAction(this));
+        protectorMenu.add(new ImageRestorerAction(this));
 
         JMenu helpMenu = new JMenu("Help");
         helpMenu.add(new AboutAction(this));
@@ -94,8 +94,8 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
         }
     }
 
-    public void authenticateImage(Protector protector) throws Exception {
-        File file = protector.authenticatingImage(imagePanel.getImage());
+    public void restoreImage(Protector protector) throws Exception {
+        File file = protector.restoreImage(imagePanel.getImage());
         imagePanel.loadImage(file);
     }
 
@@ -137,25 +137,30 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
 
     }
 
-    public void draggedScreen() throws Exception {
-        int w = c1 - c3;
-        int h = c2 - c4;
-        w = w * -1;
-        h = h * -1;
+    public void draggedScreen() {
+        try {
+            int w = c1 - c3;
+            int h = c2 - c4;
+            w = w * -1;
+            h = h * -1;
 
-        BufferedImage image = imagePanel.getImage();
-        BufferedImage partToProtect = image.getSubimage(c1, c2, w, h);
+            BufferedImage image = imagePanel.getImage();
+            BufferedImage partToProtect = image.getSubimage(c1, c2, w, h);
 
-        new Protector().protectImage(image, partToProtect);
+            new Protector().protectImage(image, partToProtect);
 
-        Graphics graphics = image.getGraphics();
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(c1, c2, w, h);
-        drag_status=0;
-        repaint();
-        loadImage();
+            Graphics graphics = image.getGraphics();
+            graphics.setColor(Color.BLACK);
+            graphics.fillRect(c1, c2, w, h);
 
-        showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
+            drag_status = 0;
+            repaint();
+            loadImage();
+
+            showInformationMessage(this, MESSAGE_ENCRYPTION_COMPLETED);
+        } catch (Exception e) {
+            showErrorMessage(this, MESSAGE_IO_ERROR, e.getMessage());
+        }
     }
 
     @Override
@@ -183,7 +188,7 @@ public class MainFrame extends JFrame implements MouseListener, MouseMotionListe
 
     public void paint(Graphics g) {
         super.paint(g);
-        if(drag_status == 1){
+        if (drag_status == 1) {
             g.setColor(Color.RED);
             int w = c1 - c3;
             int h = c2 - c4;

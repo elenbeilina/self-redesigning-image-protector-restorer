@@ -5,11 +5,11 @@ import java.awt.*;
 
 public class Parameters {
 
-    public static final String PROGRAM_NAME = "Image protector/authenticator";
+    public static final String PROGRAM_NAME = "Image protector/restorer";
     public static final String PROGRAM_AUTHOR = "Elena Beilina";
 
-    public static int MAINFRAME_WIDTH = 550;
-    public static int MAINFRAME_HEIGHT = 550;
+    public static int MAINFRAME_WIDTH = 700;
+    public static int MAINFRAME_HEIGHT = 700;
 
     public static void showErrorMessage(Component parentComponent, String message, String errorMessage) {
         JOptionPane.showMessageDialog(parentComponent, message + "\n\nError message:\n\n" + "<html><textarea cols=20 rows=2>" + errorMessage.replaceAll("[\n\r]", " ") + "</textarea></html>", Parameters.PROGRAM_NAME, JOptionPane.ERROR_MESSAGE);
