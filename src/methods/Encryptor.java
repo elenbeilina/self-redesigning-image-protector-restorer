@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Encryptor {
 
     public void hideTheMessage(BufferedImage coverImage,
-                               File imageToHide) throws IOException, EncodeException {
+                               File imageToHide, String key) throws IOException, EncodeException {
         {
             capacityCheck(coverImage, imageToHide);
 
@@ -21,7 +21,7 @@ public class Encryptor {
             WritableRaster raster = coverImage.getRaster();
             FileInputStream srcFile = new FileInputStream(imageToHide);
 
-            SecurityManager securityManager = new SecurityManager("csf is the best");
+            SecurityManager securityManager = new SecurityManager(key);
 
             int x, y;
             int r, g, b;

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class Descriptor {
 
-    public File decodeTheImage(BufferedImage coverImage) throws Exception {
+    public File decodeTheImage(BufferedImage coverImage, String key) throws Exception {
         Raster raster = coverImage.getData();
 
         int w, h;
@@ -23,7 +23,7 @@ public class Descriptor {
         int counter = 0;
         int data;
 
-        SecurityManager securityManager = new SecurityManager("csf is the best");
+        SecurityManager securityManager = new SecurityManager(key);
         int flag = securityManager.getPermutation();
         int fileSize = 0;
         String header = "";
